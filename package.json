@@ -1,0 +1,25 @@
+{
+  "name": "ma-todolist",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.10.1",
+    "ejs": "~2.1.4",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.2",
+    "socket.io": "^2.2.0"
+  },
+  "author": "Fabricelifaa <fabfly95@gmail.com>",
+  "description": "Un gestionnaire de todolist avec socket io",
+  "main": "app.js",
+  "devDependencies": {},
+  "keywords": [
+    "ejs",
+    "socketio",
+    "express"
+  ],
+  "license": "ISC"
+}

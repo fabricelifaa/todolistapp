@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Ma todolist</title>
+        <style>
+            a {text-decoration: none; color: black;}
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/jquery-2.2.4.min.js"></script>
+    </head>
+
+    <body>
+        <h1>Ma todolist</h1>
+
+        <ul>
+        <% todolist.forEach(function(todo, index) { %>
+            <li id="<%= index %>" class="todo"><a href="#" onclick="deltodo(<%= index %>)">✘</a> <%= todo %></li>
+        <% }); %>
+        </ul>
+            <p>
+                <label for="newtodo">Que dois-je faire ?</label>
+                <input type="text" name="newtodo" id="newtodo" autofocus />
+                <button id="savetodo">Ajouter</button>
+            </p>
+    </body>
+    
+    <script type="text/javascript">
+        
+       
+
+            /*Socket connection*/
+            var socket = io.connect('localhost:8080');
+            /* Supprime un élément de la todolist */
+            function deltodo (index) {
+                socket.emit('del-todolist', { index: index });
+                $('#' + index + '').fadeOut('slow').remove();
+            }
+            /* Quand un element est supprimé de la list par un autre utilisateur */
+            socket.on('deltodo', function (data) {
+                $('#' + data.todoindex).fadeOut('fast').remove();
+            });
+
+            /* On ajoute un élément à la todolist*/
+            $('button[id=savetodo]').on('click', function () {
+                var newtodo = $('#newtodo').val();
+                $$('#newtodo').val('');
+                socket.emit('add-todolist', { todo: newtodo });
+                
+                
+            });
+            function addTodo (todoId, todo){
+                return '<li id="'+ todoId +'" class="todo"><a href="#" onclick="deltodo('+ todoId +')">✘</a> '+ todo +'</li>';
+            }
+            socket.on('lastindex', function (data) {
+                $('ul').append(function () {
+                    return addTodo(data.lastindex, data.todo);
+                });
+            });
+
+            /* Quand un element est ajouté à la list par un autre utilisateur */
+            socket.on('newtodo', function (data) {
+                $('ul').append(function () {
+                    return addTodo(data.todoindex, data.todo);
+                });
+            });
+
+        
+    </script>
+</html>
